@@ -6,7 +6,7 @@ class AppTheme {
   ThemeData getTheme() => ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromRGBO(72, 74, 126, 1),
+          seedColor: const Color.fromRGBO(103, 58, 183, 1), // Morado suave
         ),
       );
 }
