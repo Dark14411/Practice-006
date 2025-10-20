@@ -13,20 +13,20 @@ class CustomWaves extends StatelessWidget {
       config: CustomConfig(
         gradients: [
           [
-            const Color.fromRGBO(72, 136, 199, 1),
-            const Color.fromRGBO(72, 136, 199, 1),
+            const Color.fromRGBO(220, 20, 60, 1),  // Rojo Crimson
+            const Color.fromRGBO(255, 215, 0, 1),  // Amarillo Dorado
           ],
           [
-            const Color.fromRGBO(72, 136, 199, 0.8),
-            const Color.fromRGBO(72, 136, 199, 0.8),
+            const Color.fromRGBO(220, 20, 60, 0.8),
+            const Color.fromRGBO(255, 215, 0, 0.8),
           ],
           [
-            const Color.fromRGBO(72, 136, 199, 0.6),
-            const Color.fromRGBO(72, 136, 199, 0.6),
+            const Color.fromRGBO(220, 20, 60, 0.6),
+            const Color.fromRGBO(255, 215, 0, 0.6),
           ],
           [
-            const Color.fromRGBO(72, 136, 199, 0.4),
-            const Color.fromRGBO(72, 136, 199, 0.4),
+            const Color.fromRGBO(220, 20, 60, 0.4),
+            const Color.fromRGBO(255, 215, 0, 0.4),
           ],
         ],
         durations: [30000, 21000, 18000, 50000],

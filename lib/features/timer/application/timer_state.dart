@@ -5,11 +5,13 @@ part of 'timer_bloc.dart';
 /// file. This helps in ensuring that all possible subclasses of `TimerState` are known and handled
 /// within the same file.
 sealed class TimerState extends Equatable {
-  const TimerState(this.duration);
+  const TimerState(this.duration, {this.currentCycle = 1, this.totalCycles = 1});
   final int duration;
+  final int currentCycle;
+  final int totalCycles;
 
   @override
-  List<Object> get props => [duration];
+  List<Object> get props => [duration, currentCycle, totalCycles];
 }
 
 /// The `TimerInitial` class represents the initial state of a timer with a specified duration in Dart.
@@ -23,10 +25,10 @@ class TimerInitial extends TimerState {
 /// The `TimerTicking` class represents the state of a timer that is currently ticking with a specific
 /// duration.
 class TimerTicking extends TimerState {
-  const TimerTicking(super.duration);
+  const TimerTicking(super.duration, {super.currentCycle, super.totalCycles});
 
   @override
-  String toString() => 'TimerTicking { duration: $duration }';
+  String toString() => 'TimerTicking { duration: $duration, cycle: $currentCycle/$totalCycles }';
 }
 
 /// The `TimerFinished` class represents a state where the timer has finished.

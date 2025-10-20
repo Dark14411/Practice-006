@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:javerage_timer/features/timer/application/timer_bloc.dart';
 import 'package:javerage_timer/features/timer/presentation/widgets/actions_buttons.dart';
 import 'package:javerage_timer/features/timer/presentation/widgets/background.dart';
 import 'package:javerage_timer/features/timer/presentation/widgets/timer_text.dart';
@@ -39,16 +41,34 @@ class _TimerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: verticalPadding),
-          child: const Center(child: TimerText()),
-        ),
-        const ActionsButtons(),
-      ],
+    return BlocBuilder<TimerBloc, TimerState>(
+      builder: (context, state) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: verticalPadding),
+              child: Column(
+                children: [
+                  const Center(child: TimerText()),
+                  if (state.totalCycles > 1)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Text(
+                        'Ciclo ${state.currentCycle} de ${state.totalCycles}',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            const ActionsButtons(),
+          ],
+        );
+      },
     );
   }
 }

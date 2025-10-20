@@ -14,8 +14,12 @@ sealed class TimerEvent extends Equatable {
 /// The `TimerStarted` class in Dart represents an event indicating the start of a timer with a
 /// specified duration.
 class TimerStarted extends TimerEvent {
-  const TimerStarted({required this.duration});
+  const TimerStarted({required this.duration, this.cycles});
   final int duration;
+  final int? cycles;
+  
+  @override
+  List<Object> get props => [duration];
 }
 
 /// The `TimerTicked` class represents an event that occurs when a timer ticks with a specified
@@ -37,4 +41,13 @@ class TimerPaused extends TimerEvent {
 /// timer.
 class TimerReset extends TimerEvent {
   const TimerReset();
+}
+
+/// The `TimerDurationChanged` class represents an event to change the timer duration.
+class TimerDurationChanged extends TimerEvent {
+  const TimerDurationChanged({required this.duration});
+  final int duration;
+  
+  @override
+  List<Object> get props => [duration];
 }
