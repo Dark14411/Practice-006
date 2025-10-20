@@ -10,7 +10,7 @@ Una aplicación de temporizador desarrollada en Flutter siguiendo los principios
 - 🎨 **Indicadores visuales** - CircularProgressIndicator animado y hints interactivos
 - 🔁 **Sistema de ciclos** - Repite el temporizador automáticamente N veces
 - 🔊 **Notificación sonora** - Alarma de biohazard optimizada con modo low-latency
-- 🌊 **Fondo animado** optimizado con gradientes rojo y amarillo (reducido para mejor rendimiento)
+- 🌊 **Fondo animado** optimizado con gradientes morado suave (reducido para mejor rendimiento)
 - ▶️ Controles completos: play, pause, reset y repetir
 - ⚡ **Ultra optimizado** - Reducción de capas de animación, blur y emisiones de estado
 - 📱 Interfaz responsive (orientación vertical y horizontal)
@@ -43,6 +43,7 @@ Una aplicación de temporizador desarrollada en Flutter siguiendo los principios
 - 🔢 Validación de entrada en tiempo real
 - 🎨 Sombras en texto para mejor legibilidad
 - 📏 Fuente aumentada a 72px para mejor visibilidad
+- 🟣 **Nuevo esquema de color morado suave** para mejor experiencia visual
 
 ### Android
 - 🔒 Solo permisos necesarios (INTERNET para audio assets)
