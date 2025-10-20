@@ -35,32 +35,39 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   }
 
   void _onStarted(TimerStarted event, Emitter<TimerState> emit) {
-    _currentCycle = 0;
+    _currentCycle = 1;
     _cycles = event.cycles ?? 1;
     _initialDuration = event.duration;
     emit(TimerTicking(event.duration, currentCycle: 1, totalCycles: _cycles));
     _tickerSubscription?.cancel();
     _tickerSubscription = _timerRepository
         .ticker()
-        .listen((ticks) => add(TimerTicked(duration: event.duration - ticks)));
+        .listen((ticks) {
+          final remaining = event.duration - ticks;
+          if (remaining >= 0) {
+            add(TimerTicked(duration: remaining));
+          }
+        });
   }
 
   void _onTicked(TimerTicked event, Emitter<TimerState> emit) {
     if (event.duration > 0) {
-      emit(TimerTicking(event.duration, currentCycle: _currentCycle + 1, totalCycles: _cycles));
+      // Solo emitir si el estado realmente cambió
+      if (state.duration != event.duration) {
+        emit(TimerTicking(event.duration, currentCycle: _currentCycle, totalCycles: _cycles));
+      }
     } else {
-      // Timer reached 0
-      _currentCycle++;
+      // Timer reached 0 - emitir TimerFinished primero
+      emit(const TimerFinished());
+      
+      // Si hay más ciclos, programar el inicio del siguiente ciclo
       if (_currentCycle < _cycles) {
-        // Start next cycle
-        emit(TimerTicking(_initialDuration, currentCycle: _currentCycle + 1, totalCycles: _cycles));
-        _tickerSubscription?.cancel();
-        _tickerSubscription = _timerRepository
-            .ticker()
-            .listen((ticks) => add(TimerTicked(duration: _initialDuration - ticks)));
-      } else {
-        // All cycles completed
-        emit(const TimerFinished());
+        _currentCycle++;
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (!isClosed) {
+            add(TimerStarted(duration: _initialDuration, cycles: _cycles));
+          }
+        });
       }
     }
   }
@@ -74,7 +81,8 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
 
   void _onReset(TimerReset event, Emitter<TimerState> emit) {
     _tickerSubscription?.cancel();
-    _currentCycle = 0;
+    _currentCycle = 1;
+    _cycles = 1;
     emit(TimerInitial(_initialDuration));
   }
 
