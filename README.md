@@ -8,12 +8,20 @@ Una aplicación de temporizador desarrollada en Flutter siguiendo los principios
 
 - ⏱️ **Temporizador personalizable** - Configura la duración que desees (tap en el tiempo para cambiarla)
 - 🔁 **Sistema de ciclos** - Repite el temporizador automáticamente N veces
-- 🔊 **Notificación sonora** - Alarma de biohazard cuando el timer llega a cero
+- 🔊 **Notificación sonora** - Alarma de biohazard cuando el timer llega a cero (se detiene al presionar reset)
 - 🌊 **Fondo animado** con gradientes rojo y amarillo
 - ▶️ Controles completos: play, pause, reset y repetir
+- ⚡ **Optimizado** - Reducción de emisiones de estado innecesarias
 - 📱 Interfaz responsive (orientación vertical y horizontal)
 - 🏗️ Arquitectura limpia por capas
 - 🧪 Tests unitarios incluidos
+
+## 🐛 Bugs Corregidos (v1.1.0)
+
+- ✅ Conversión correcta de segundos a minutos en el display
+- ✅ Alarma se detiene automáticamente al presionar reset
+- ✅ Lógica de ciclos optimizada para evitar comportamiento errático
+- ✅ Optimización del BLoC para reducir rebuilds innecesarios
 
 ## 🏛️ Arquitectura
 
