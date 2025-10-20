@@ -6,9 +6,11 @@ Una aplicación de temporizador desarrollada en Flutter siguiendo los principios
 
 ## 🎯 Características
 
-- ⏱️ Temporizador de cuenta regresiva de 60 segundos
-- ▶️ Controles de reproducir, pausar y reiniciar
-- 🌊 Fondo animado con efecto de olas
+- ⏱️ **Temporizador personalizable** - Configura la duración que desees (tap en el tiempo para cambiarla)
+- 🔁 **Sistema de ciclos** - Repite el temporizador automáticamente N veces
+- 🔊 **Notificación sonora** - Alarma de biohazard cuando el timer llega a cero
+- 🌊 **Fondo animado** con gradientes rojo y amarillo
+- ▶️ Controles completos: play, pause, reset y repetir
 - 📱 Interfaz responsive (orientación vertical y horizontal)
 - 🏗️ Arquitectura limpia por capas
 - 🧪 Tests unitarios incluidos
@@ -53,6 +55,7 @@ lib/
 - **flutter_bloc**: Gestión de estado reactivo
 - **equatable**: Optimización de comparaciones
 - **wave**: Animaciones de fondo
+- **audioplayers**: Reproducción de sonidos
 
 ## 🚀 Comenzando
 
@@ -66,8 +69,8 @@ lib/
 
 1. Clonar el repositorio:
 ```bash
-git clone <repository-url>
-cd javerage_timer
+git clone https://github.com/Dark14411/Practice-006.git
+cd Practice-006
 ```
 
 2. Obtener las dependencias:
@@ -79,6 +82,30 @@ flutter pub get
 ```bash
 flutter run --debug
 ```
+
+### Compilar APK
+
+Para generar el APK de la aplicación:
+
+**Opción 1: Usando el script (Windows)**
+```bash
+build_apk.bat
+```
+
+**Opción 2: Comando manual**
+```bash
+flutter build apk --release
+```
+
+El APK se generará en: `build/app/outputs/flutter-apk/app-release.apk`
+
+## 📱 Cómo Usar
+
+1. **Configurar duración**: Tap en el tiempo mostrado (01:00) cuando el timer esté en estado inicial
+2. **Configurar ciclos**: Presiona el botón de repetir (🔁) antes de iniciar
+3. **Iniciar timer**: Presiona el botón play (▶️)
+4. **Pausar**: Presiona el botón pause (⏸️) mientras el timer está corriendo
+5. **Reiniciar**: Presiona el botón replay (🔄) para volver al inicio
 
 ### Ejecutar Tests
 
@@ -97,16 +124,28 @@ Este proyecto fue diseñado como herramienta educativa para aprender:
 - ✅ Testing de widgets
 - ✅ Uso eficiente de Streams
 - ✅ Optimización de rebuilds con `BlocBuilder` y `buildWhen`
+- ✅ Manejo de audio con AudioPlayers
+- ✅ Gestión de ciclos y repeticiones
 
 ## 🎨 Personalización
 
-### Cambiar la duración del temporizador
+### Cambiar los colores de las olas
 
-Edita la constante `_duration` en `lib/features/timer/application/timer_bloc.dart`:
+Edita los gradientes en `lib/features/timer/presentation/widgets/custom_waves.dart`:
 
 ```dart
-static const int _duration = 60; // Cambia este valor
+gradients: [
+  [
+    const Color.fromRGBO(220, 20, 60, 1),  // Rojo Crimson
+    const Color.fromRGBO(255, 215, 0, 1),  // Amarillo Dorado
+  ],
+  // ... más gradientes
+]
 ```
+
+### Cambiar el sonido de la alarma
+
+Reemplaza el archivo en `assets/sounds/biohazard-alarm-143105.mp3` con tu sonido personalizado y actualiza la referencia en `timer_screen.dart`.
 
 ### Personalizar el tema
 
@@ -118,12 +157,19 @@ colorScheme: ColorScheme.fromSeed(
 ),
 ```
 
-## 🔮 Desafíos Propuestos
+## ✨ Características Implementadas
 
-1. **Duración Personalizable**: Permitir al usuario ingresar una duración personalizada
-2. **Retroalimentación Visual**: Agregar un `CircularProgressIndicator` que se agote visualmente
-3. **Notificaciones Sonoras**: Reproducir un sonido cuando el temporizador llegue a cero
-4. **Agregar Vueltas (Laps)**: Registrar tiempos de vuelta sin detener el temporizador
+- ✅ **Duración Personalizable**: Tap en el tiempo para configurar duración custom
+- ✅ **Sistema de Ciclos**: Botón de repetición para configurar múltiples ciclos
+- ✅ **Notificación Sonora**: Alarma de biohazard al finalizar el timer
+- ✅ **Colores Personalizados**: Gradientes rojo y amarillo en las olas
+
+## 🔮 Desafíos Adicionales
+
+1. **Retroalimentación Visual**: Agregar un `CircularProgressIndicator` que se agote visualmente
+2. **Agregar Vueltas (Laps)**: Registrar tiempos de vuelta sin detener el temporizador
+3. **Persistencia**: Guardar configuraciones y última duración usada
+4. **Modo Oscuro**: Implementar tema oscuro/claro
 
 ## 📄 Licencia
 
