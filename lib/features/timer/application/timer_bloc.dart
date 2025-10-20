@@ -52,7 +52,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
 
   void _onTicked(TimerTicked event, Emitter<TimerState> emit) {
     if (event.duration > 0) {
-      // Solo emitir si el estado realmente cambió
+      // Solo emitir si el estado realmente cambió (optimización crítica)
       if (state.duration != event.duration) {
         emit(TimerTicking(event.duration, currentCycle: _currentCycle, totalCycles: _cycles));
       }
@@ -63,6 +63,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       // Si hay más ciclos, programar el inicio del siguiente ciclo
       if (_currentCycle < _cycles) {
         _currentCycle++;
+        // Usar Future.delayed para evitar bloqueos
         Future.delayed(const Duration(milliseconds: 500), () {
           if (!isClosed) {
             add(TimerStarted(duration: _initialDuration, cycles: _cycles));

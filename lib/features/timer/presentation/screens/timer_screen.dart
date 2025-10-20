@@ -21,13 +21,32 @@ class _TimerScreenState extends State<TimerScreen> {
   void initState() {
     super.initState();
     _audioPlayer = AudioPlayer();
+    // Configurar para mejor rendimiento
     _audioPlayer.setReleaseMode(ReleaseMode.stop);
+    _audioPlayer.setPlayerMode(PlayerMode.lowLatency);
   }
 
   @override
   void dispose() {
     _audioPlayer.dispose();
     super.dispose();
+  }
+
+  Future<void> _playAlarm() async {
+    try {
+      await _audioPlayer.stop();
+      await _audioPlayer.play(AssetSource('sounds/biohazard-alarm-143105.mp3'));
+    } catch (e) {
+      debugPrint('Error playing sound: $e');
+    }
+  }
+
+  Future<void> _stopAlarm() async {
+    try {
+      await _audioPlayer.stop();
+    } catch (e) {
+      debugPrint('Error stopping sound: $e');
+    }
   }
 
   @override
@@ -37,19 +56,10 @@ class _TimerScreenState extends State<TimerScreen> {
       child: BlocListener<TimerBloc, TimerState>(
         listener: (context, state) async {
           if (state is TimerFinished) {
-            try {
-              await _audioPlayer.stop();
-              await _audioPlayer.play(AssetSource('sounds/biohazard-alarm-143105.mp3'));
-            } catch (e) {
-              debugPrint('Error playing sound: $e');
-            }
+            await _playAlarm();
           } else if (state is TimerInitial || state is TimerTicking) {
-            // Detener el sonido cuando se reinicia o se pausa
-            try {
-              await _audioPlayer.stop();
-            } catch (e) {
-              debugPrint('Error stopping sound: $e');
-            }
+            // Detener el sonido cuando se reinicia o se está corriendo
+            await _stopAlarm();
           }
         },
         child: const TimerView(),

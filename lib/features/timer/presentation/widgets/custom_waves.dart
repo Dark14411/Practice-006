@@ -17,26 +17,20 @@ class CustomWaves extends StatelessWidget {
             const Color.fromRGBO(255, 215, 0, 1),  // Amarillo Dorado
           ],
           [
-            const Color.fromRGBO(220, 20, 60, 0.8),
-            const Color.fromRGBO(255, 215, 0, 0.8),
-          ],
-          [
-            const Color.fromRGBO(220, 20, 60, 0.6),
-            const Color.fromRGBO(255, 215, 0, 0.6),
-          ],
-          [
-            const Color.fromRGBO(220, 20, 60, 0.4),
-            const Color.fromRGBO(255, 215, 0, 0.4),
+            const Color.fromRGBO(220, 20, 60, 0.7),
+            const Color.fromRGBO(255, 215, 0, 0.7),
           ],
         ],
-        durations: [30000, 21000, 18000, 50000],
-
-        heightPercentages: [0.30, 0.28, 0.30, 0.26],
-        blur: const MaskFilter.blur(BlurStyle.solid, 10),
+        // Aumentar duración de animaciones para reducir CPU
+        durations: [45000, 35000],
+        heightPercentages: [0.28, 0.26],
+        // Reducir blur para mejor rendimiento
+        blur: const MaskFilter.blur(BlurStyle.solid, 5),
         gradientBegin: Alignment.bottomLeft,
         gradientEnd: Alignment.topRight,
       ),
-      waveAmplitude: 35,
+      // Reducir amplitud para menos cálculos
+      waveAmplitude: 25,
       size: const Size(double.infinity, double.infinity),
     );
   }

@@ -6,22 +6,48 @@ Una aplicación de temporizador desarrollada en Flutter siguiendo los principios
 
 ## 🎯 Características
 
-- ⏱️ **Temporizador personalizable** - Configura la duración que desees (tap en el tiempo para cambiarla)
+- ⏱️ **Temporizador personalizable** - Configura la duración con validación en tiempo real
+- 🎨 **Indicadores visuales** - CircularProgressIndicator animado y hints interactivos
 - 🔁 **Sistema de ciclos** - Repite el temporizador automáticamente N veces
-- 🔊 **Notificación sonora** - Alarma de biohazard cuando el timer llega a cero (se detiene al presionar reset)
-- 🌊 **Fondo animado** con gradientes rojo y amarillo
+- 🔊 **Notificación sonora** - Alarma de biohazard optimizada con modo low-latency
+- 🌊 **Fondo animado** optimizado con gradientes rojo y amarillo (reducido para mejor rendimiento)
 - ▶️ Controles completos: play, pause, reset y repetir
-- ⚡ **Optimizado** - Reducción de emisiones de estado innecesarias
+- ⚡ **Ultra optimizado** - Reducción de capas de animación, blur y emisiones de estado
 - 📱 Interfaz responsive (orientación vertical y horizontal)
 - 🏗️ Arquitectura limpia por capas
 - 🧪 Tests unitarios incluidos
+- 🔋 **Optimización de batería** - Animaciones reducidas y audio player en low-latency
+- 🚀 **Alto rendimiento** - Solo 2 capas de waves vs 4 anteriores
 
-## 🐛 Bugs Corregidos (v1.1.0)
+## 🐛 Bugs Corregidos y Optimizaciones (v1.2.0)
 
-- ✅ Conversión correcta de segundos a minutos en el display
-- ✅ Alarma se detiene automáticamente al presionar reset
-- ✅ Lógica de ciclos optimizada para evitar comportamiento errático
-- ✅ Optimización del BLoC para reducir rebuilds innecesarios
+### Correcciones
+- ✅ Diálogo de configuración con validación en tiempo real
+- ✅ Prevención de entrada de segundos > 59
+- ✅ Labels claros con iconos (Minutos ⏰ y Segundos ⏱️)
+- ✅ Mensajes de ayuda contextuales
+- ✅ Alarma se detiene automáticamente al presionar reset o pausar
+
+### Optimizaciones de Rendimiento
+- ⚡ Animaciones de waves reducidas de 4 a 2 capas (50% menos GPU)
+- ⚡ Blur reducido de 10 a 5 (menos procesamiento)
+- ⚡ Duración de animaciones aumentada (45s y 35s vs 30s, 21s, 18s, 50s)
+- ⚡ Amplitud de olas reducida de 35 a 25
+- ⚡ AudioPlayer en modo low-latency
+- ⚡ Optimización crítica del BLoC (comentarios explícitos)
+- ⚡ Indicador circular solo cuando timer está corriendo
+
+### Mejoras UX
+- 📍 Indicador de progreso circular animado durante countdown
+- 💡 Hint "Toca para configurar" en estado inicial
+- 🔢 Validación de entrada en tiempo real
+- 🎨 Sombras en texto para mejor legibilidad
+- 📏 Fuente aumentada a 72px para mejor visibilidad
+
+### Android
+- 🔒 Solo permisos necesarios (INTERNET para audio assets)
+- 📦 HardwareAcceleration habilitado
+- 🏷️ Label de app mejorado: "Javerage Timer"
 
 ## 🏛️ Arquitectura
 

@@ -1,8 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Solo permisos necesarios para audio -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    
     <application
-        android:label="javerage_timer"
+        android:label="Javerage Timer"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:hardwareAccelerated="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
