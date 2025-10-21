@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:javerage_timer/features/timer/application/timer_bloc.dart';
 
@@ -92,8 +93,10 @@ class ActionsButtons extends StatelessWidget {
             FloatingActionButton(
               heroTag: 'lap_button',
               child: const Icon(Icons.flag),
-              onPressed: () =>
-                  context.read<TimerBloc>().add(const TimerLap()),
+              onPressed: () {
+                HapticFeedback.mediumImpact();
+                context.read<TimerBloc>().add(const TimerLap());
+              },
             ),
             FloatingActionButton(
               heroTag: 'reset_button',

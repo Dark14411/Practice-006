@@ -30,6 +30,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   int _totalTime = 0;
   int _currentLap = 0;
   DateTime? _startTime;
+  DateTime? _lastLapTime;
 
   StreamSubscription<int>? _tickerSubscription;
 
@@ -102,6 +103,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     _totalTime = 0;
     _currentLap = 0;
     _startTime = null;
+    _lastLapTime = null;
     emit(TimerInitial(_initialDuration));
   }
 
@@ -114,6 +116,14 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   void _onLap(TimerLap event, Emitter<TimerState> emit) {
     if (state is TimerTicking && _startTime != null) {
       final now = DateTime.now();
+      
+      // Cooldown de 2 segundos entre laps
+      if (_lastLapTime != null && 
+          now.difference(_lastLapTime!).inSeconds < 2) {
+        print('DEBUG: Lap ignored - cooldown active (wait ${2 - now.difference(_lastLapTime!).inSeconds}s)');
+        return;
+      }
+      
       final lapTimeInSeconds = now.difference(_startTime!).inMilliseconds / 1000.0;
       final lapTime = lapTimeInSeconds.round(); // Redondear al segundo más cercano
       
@@ -123,6 +133,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
         _currentLap = _lapTimes.length;
         _totalTime += lapTime;
         _startTime = now; // Reset start time for next lap
+        _lastLapTime = now;
         
         print('DEBUG: Lap registered - lapTime: $lapTime seconds, total laps: $_currentLap');
         
