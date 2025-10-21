@@ -18,6 +18,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     on<TimerPaused>(_onPaused);
     on<TimerReset>(_onReset);
     on<TimerDurationChanged>(_onDurationChanged);
+    on<TimerLap>(_onLap);
   }
 
   final TimerRepository _timerRepository;
@@ -25,6 +26,10 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   int _initialDuration = _duration;
   int _cycles = 1;
   int _currentCycle = 0;
+  List<int> _lapTimes = [];
+  int _totalTime = 0;
+  int _currentLap = 0;
+  DateTime? _startTime;
 
   StreamSubscription<int>? _tickerSubscription;
 
@@ -35,10 +40,19 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   }
 
   void _onStarted(TimerStarted event, Emitter<TimerState> emit) {
+    print('DEBUG: ========== _onStarted CALLED ==========');
+    print('DEBUG: event.duration = ${event.duration}');
+    print('DEBUG: _initialDuration BEFORE = $_initialDuration');
+    print('DEBUG: Timer started with duration: ${event.duration}');
     _currentCycle = 1;
     _cycles = event.cycles ?? 1;
     _initialDuration = event.duration;
-    emit(TimerTicking(event.duration, currentCycle: 1, totalCycles: _cycles));
+    print('DEBUG: _initialDuration AFTER = $_initialDuration');
+    _lapTimes = [];
+    _totalTime = 0;
+    _currentLap = 0;
+    _startTime ??= DateTime.now();
+    emit(TimerTicking(event.duration, currentCycle: 1, totalCycles: _cycles, lapTimes: _lapTimes, totalTime: _totalTime, currentLap: _currentLap));
     _tickerSubscription?.cancel();
     _tickerSubscription = _timerRepository
         .ticker()
@@ -54,7 +68,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     if (event.duration > 0) {
       // Solo emitir si el estado realmente cambió (optimización crítica)
       if (state.duration != event.duration) {
-        emit(TimerTicking(event.duration, currentCycle: _currentCycle, totalCycles: _cycles));
+        emit(TimerTicking(event.duration, currentCycle: _currentCycle, totalCycles: _cycles, lapTimes: _lapTimes, totalTime: _totalTime, currentLap: _currentLap));
       }
     } else {
       // Timer reached 0 - emitir TimerFinished primero
@@ -76,7 +90,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   void _onPaused(TimerPaused event, Emitter<TimerState> emit) {
     if (state is TimerTicking) {
       _tickerSubscription?.pause();
-      emit(TimerInitial(state.duration));
+      emit(TimerPauseState(state.duration, currentCycle: _currentCycle, totalCycles: _cycles, lapTimes: _lapTimes, totalTime: _totalTime, currentLap: _currentLap));
     }
   }
 
@@ -84,11 +98,40 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     _tickerSubscription?.cancel();
     _currentCycle = 1;
     _cycles = 1;
+    _lapTimes = [];
+    _totalTime = 0;
+    _currentLap = 0;
+    _startTime = null;
     emit(TimerInitial(_initialDuration));
   }
 
   void _onDurationChanged(TimerDurationChanged event, Emitter<TimerState> emit) {
+    print('DEBUG: Duration changed to: ${event.duration} seconds');
     _initialDuration = event.duration;
     emit(TimerInitial(event.duration));
+  }
+
+  void _onLap(TimerLap event, Emitter<TimerState> emit) {
+    if (state is TimerTicking && _startTime != null) {
+      final now = DateTime.now();
+      final lapTimeInSeconds = now.difference(_startTime!).inMilliseconds / 1000.0;
+      final lapTime = lapTimeInSeconds.round(); // Redondear al segundo más cercano
+      
+      // Solo registrar laps de al menos 1 segundo para evitar laps accidentales
+      if (lapTime >= 1) {
+        _lapTimes.add(lapTime);
+        _currentLap = _lapTimes.length;
+        _totalTime += lapTime;
+        _startTime = now; // Reset start time for next lap
+        
+        print('DEBUG: Lap registered - lapTime: $lapTime seconds, total laps: $_currentLap');
+        
+        emit(TimerTicking(state.duration, currentCycle: _currentCycle, totalCycles: _cycles, lapTimes: _lapTimes, totalTime: _totalTime, currentLap: _currentLap));
+      } else {
+        print('DEBUG: Lap ignored - too short ($lapTime seconds)');
+      }
+    } else {
+      print('DEBUG: Lap ignored - timer not running');
+    }
   }
 }

@@ -7,7 +7,7 @@ import 'package:javerage_timer/features/timer/application/timer_bloc.dart';
 class ActionsButtons extends StatelessWidget {
   const ActionsButtons({super.key});
 
-  Future<void> _showCyclesDialog(BuildContext context, int duration) async {
+  Future<void> _showCyclesDialog(BuildContext context) async {
     final TextEditingController cyclesController = TextEditingController(text: '1');
     
     final result = await showDialog<int>(
@@ -48,61 +48,88 @@ class ActionsButtons extends StatelessWidget {
     );
 
     if (result != null && context.mounted) {
+      final currentState = context.read<TimerBloc>().state;
       context.read<TimerBloc>().add(
-        TimerStarted(duration: duration, cycles: result),
+        TimerStarted(duration: currentState.duration, cycles: result),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TimerBloc, TimerState>(
-      buildWhen: (prev, state) => prev.runtimeType != state.runtimeType,
-      builder: (context, state) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ...switch (state) {
-              TimerInitial() => [
-                FloatingActionButton(
-                  heroTag: 'play_button',
-                  child: const Icon(Icons.play_arrow),
-                  onPressed: () => context.read<TimerBloc>().add(
-                    TimerStarted(duration: state.duration, cycles: 1),
-                  ),
-                ),
-                FloatingActionButton(
-                  heroTag: 'cycles_button',
-                  child: const Icon(Icons.repeat),
-                  onPressed: () => _showCyclesDialog(context, state.duration),
-                ),
-              ],
-              TimerTicking() => [
-                FloatingActionButton(
-                  heroTag: 'pause_button',
-                  child: const Icon(Icons.pause),
-                  onPressed: () =>
-                      context.read<TimerBloc>().add(const TimerPaused()),
-                ),
-                FloatingActionButton(
-                  heroTag: 'reset_button',
-                  child: const Icon(Icons.replay),
-                  onPressed: () =>
-                      context.read<TimerBloc>().add(const TimerReset()),
-                ),
-              ],
-              TimerFinished() => [
-                FloatingActionButton(
-                  heroTag: 'replay_button',
-                  child: const Icon(Icons.replay),
-                  onPressed: () =>
-                      context.read<TimerBloc>().add(const TimerReset()),
-                ),
-              ],
-            },
+    final state = context.watch<TimerBloc>().state;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        ...switch (state) {
+          TimerInitial() => [
+            FloatingActionButton(
+              heroTag: 'play_button',
+              child: const Icon(Icons.play_arrow),
+              onPressed: () {
+                final currentState = context.read<TimerBloc>().state;
+                print('DEBUG: Play button pressed with current state.duration: ${currentState.duration}');
+                print('DEBUG: Current state type: ${currentState.runtimeType}');
+                print('DEBUG: Bloc _initialDuration should be: ${currentState.duration}');
+                context.read<TimerBloc>().add(
+                  TimerStarted(duration: currentState.duration, cycles: 1),
+                );
+              },
+            ),
+            FloatingActionButton(
+              heroTag: 'cycles_button',
+              child: const Icon(Icons.repeat),
+              onPressed: () => _showCyclesDialog(context),
+            ),
           ],
-        );
-      },
+          TimerTicking() => [
+            FloatingActionButton(
+              heroTag: 'pause_button',
+              child: const Icon(Icons.pause),
+              onPressed: () =>
+                  context.read<TimerBloc>().add(const TimerPaused()),
+            ),
+            FloatingActionButton(
+              heroTag: 'lap_button',
+              child: const Icon(Icons.flag),
+              onPressed: () =>
+                  context.read<TimerBloc>().add(const TimerLap()),
+            ),
+            FloatingActionButton(
+              heroTag: 'reset_button',
+              child: const Icon(Icons.replay),
+              onPressed: () =>
+                  context.read<TimerBloc>().add(const TimerReset()),
+            ),
+          ],
+          TimerFinished() => [
+            FloatingActionButton(
+              heroTag: 'replay_button',
+              child: const Icon(Icons.replay),
+              onPressed: () =>
+                  context.read<TimerBloc>().add(const TimerReset()),
+            ),
+          ],
+          TimerPauseState() => [
+            FloatingActionButton(
+              heroTag: 'play_button',
+              child: const Icon(Icons.play_arrow),
+              onPressed: () {
+                final currentState = context.read<TimerBloc>().state;
+                context.read<TimerBloc>().add(
+                  TimerStarted(duration: currentState.duration, cycles: currentState.totalCycles),
+                );
+              },
+            ),
+            FloatingActionButton(
+              heroTag: 'reset_button',
+              child: const Icon(Icons.replay),
+              onPressed: () =>
+                  context.read<TimerBloc>().add(const TimerReset()),
+            ),
+          ],
+        },
+      ],
     );
   }
 }

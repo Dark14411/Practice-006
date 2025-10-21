@@ -84,14 +84,28 @@ class TimerText extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                final minutes = int.tryParse(minutesController.text) ?? 0;
-                final seconds = int.tryParse(secondsController.text) ?? 0;
+                final minutesText = minutesController.text.trim();
+                final secondsText = secondsController.text.trim();
+                
+                final minutes = minutesText.isEmpty ? 0 : int.tryParse(minutesText) ?? 0;
+                final seconds = secondsText.isEmpty ? 0 : int.tryParse(secondsText) ?? 0;
                 
                 // Validar que al menos uno sea mayor a 0
                 if (minutes == 0 && seconds == 0) {
                   ScaffoldMessenger.of(dialogContext).showSnackBar(
                     const SnackBar(
                       content: Text('⚠️ Ingresa al menos 1 segundo'),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                  return;
+                }
+                
+                // Validar que segundos no excedan 59
+                if (seconds > 59) {
+                  ScaffoldMessenger.of(dialogContext).showSnackBar(
+                    const SnackBar(
+                      content: Text('⚠️ Los segundos no pueden ser más de 59'),
                       duration: Duration(seconds: 2),
                     ),
                   );
@@ -108,8 +122,11 @@ class TimerText extends StatelessWidget {
     );
 
     if (result != null && context.mounted) {
-      final totalSeconds = (result['minutes']! * 60) + result['seconds']!;
-      if (totalSeconds > 0) {
+      final minutes = result['minutes'] as int;
+      final seconds = result['seconds'] as int;
+      final totalSeconds = (minutes * 60) + seconds;
+      print('DEBUG: Configured time - minutes: $minutes, seconds: $seconds, totalSeconds: $totalSeconds');
+      if (totalSeconds > 0 && totalSeconds <= 5999) { // Máximo 99 minutos
         context.read<TimerBloc>().add(TimerDurationChanged(duration: totalSeconds));
       }
     }

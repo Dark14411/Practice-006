@@ -19,7 +19,7 @@ class TimerStarted extends TimerEvent {
   final int? cycles;
   
   @override
-  List<Object> get props => [duration];
+  List<Object> get props => [duration, cycles ?? 1];
 }
 
 /// The `TimerTicked` class represents an event that occurs when a timer ticks with a specified
@@ -50,4 +50,9 @@ class TimerDurationChanged extends TimerEvent {
   
   @override
   List<Object> get props => [duration];
+}
+
+/// The `TimerLap` class represents an event to record a lap time.
+class TimerLap extends TimerEvent {
+  const TimerLap();
 }

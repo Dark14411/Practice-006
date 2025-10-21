@@ -39,6 +39,12 @@ class _TimerView extends StatelessWidget {
 
   final double verticalPadding;
 
+  String _formatTime(int seconds) {
+    final minutes = seconds ~/ 60;
+    final remainingSeconds = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TimerBloc, TimerState>(
@@ -60,6 +66,62 @@ class _TimerView extends StatelessWidget {
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: Colors.white70,
                         ),
+                      ),
+                    ),
+                  if (state.lapTimes.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Vueltas Registradas',
+                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                              color: Colors.white70,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Container(
+                            constraints: const BoxConstraints(maxHeight: 150),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: state.lapTimes.length,
+                              itemBuilder: (context, index) {
+                                final lapNumber = index + 1;
+                                final lapTime = state.lapTimes[index];
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 2.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Vuelta $lapNumber:',
+                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: Colors.white70,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        _formatTime(lapTime),
+                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Tiempo total: ${_formatTime(state.totalTime)}',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                 ],
